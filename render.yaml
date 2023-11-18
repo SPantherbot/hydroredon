@@ -1,8 +1,9 @@
 services:
-  - type: pserv
-    name: ssh-ngrok
-    env: docker
-    dockerfilePath: ./Dockerfile
-    envVars:
+  - name: nert
+    env:
       - key: NGROK_TOKEN
-        fromSecret: 2WFva7dfEIvALzlolb2dwOhE4kw_26EgtxJTZbbJVuSqnxzcZ
+        value: 2WFva7dfEIvALzlolb2dwOhE4kw_26EgtxJTZbbJVuSqnxzcZ
+    buildCommand: docker build -t your-docker-image .
+    startCommand: docker run -d -p 22:22 your-docker-image
+    healthCheckPath: /
+    healthCheckPort: 22
