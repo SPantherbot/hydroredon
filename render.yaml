@@ -1,9 +1,0 @@
-services:
-  - name: your-service-name
-    env:
-      - key: NGROK_TOKEN
-        value: 2WFva7dfEIvALzlolb2dwOhE4kw_26EgtxJTZbbJVuSqnxzcZ
-    buildCommand: docker build -t your-docker-image .
-    startCommand: docker run -d -p 22:22 your-docker-image
-    healthCheckPath: /
-    healthCheckPort: 22
