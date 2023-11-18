@@ -11,11 +11,13 @@ RUN apt-get update && \
 RUN echo 'root:root' | chpasswd
 RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
-# Download and install ngrok
-RUN wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip && \
-    unzip ngrok-stable-linux-amd64.zip && \
-    mv ngrok /usr/local/bin && \
-    rm ngrok-stable-linux-amd64.zip
+# Download ngrok FreeBSD+.TGZ file
+RUN wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-freebsd-amd64.tgz -O /ngrok.tgz
+
+# Extract and install ngrok from the TGZ file
+RUN tar -xzf /ngrok.tgz && \
+    mv /ngrok /usr/local/bin/ngrok && \
+    rm /ngrok.tgz
 
 # Expose the SSH port
 EXPOSE 22
