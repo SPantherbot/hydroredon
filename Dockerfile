@@ -18,7 +18,7 @@ RUN mv ngrok /usr/local/bin/
 RUN rm ngrok-stable-linux-amd64.zip
 
 # Set ngrok token
-ENV NGROK_TOKEN 2WFva7dfEIvALzlolb2dwOhE4kw_26EgtxJTZbbJVuSqnxzcZ
+ENV NGROK_TOKEN 
 
 # Expose SSH port
 EXPOSE 22
