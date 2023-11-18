@@ -1,0 +1,8 @@
+services:
+  - type: pserv
+    name: shellinabox
+    env: docker
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: NGROK_TOKEN
+        value: 2Xj9GlTTttWVgopT1ZdsxzY1y3U_67YMfTo4zV1wNJ6VbHP7o
