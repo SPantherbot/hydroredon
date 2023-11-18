@@ -1,17 +1,28 @@
 FROM ubuntu:20.04
 
-# Install necessary packages
 RUN apt-get update && \
-    apt-get install -y openssh-server wget unzip && \
+    apt-get install -y openssh-server && \
+    apt-get install -y systemd && \
+    apt-get install -y wget && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Allow root login and set password
-RUN echo 'root:root' | chpasswd
+RUN echo 'root:your_password' | chpasswd
 RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN echo "Port 22" >> /etc/ssh/sshd_config
 
-# Expose the SSH port
+RUN wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
+RUN unzip ngrok-stable-linux-amd64.zip
+RUN mv ngrok /usr/local/bin/
+RUN rm ngrok-stable-linux-amd64.zip
+
+# Set ngrok token
+ARG NGROK_TOKEN
+ENV NGROK_TOKEN=$NGROK_TOKEN
+
+# Expose SSH port
 EXPOSE 22
 
-# Start sshd
-CMD /usr/sbin/sshd -D
+# Start SSH and ngrok
+CMD service ssh start && ngrok authtoken $NGROK_TOKEN && ngrok tcp 22
