@@ -3,11 +3,11 @@ FROM ubuntu:20.04
 RUN apt-get update && \
     apt-get install -y openssh-server && \
     apt-get install -y systemd && \
-    apt-get install -y wget && \
+    apt-get install -y wget unzip && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN echo 'root:root' | chpasswd
+RUN echo 'root:your_password' | chpasswd
 RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 RUN echo "Port 22" >> /etc/ssh/sshd_config
@@ -18,8 +18,7 @@ RUN mv ngrok /usr/local/bin/
 RUN rm ngrok-stable-linux-amd64.zip
 
 # Set ngrok token
-ARG NGROK_TOKEN
-ENV NGROK_TOKEN=$NGROK_TOKEN
+ENV NGROK_TOKEN 2WFva7dfEIvALzlolb2dwOhE4kw_26EgtxJTZbbJVuSqnxzcZ
 
 # Expose SSH port
 EXPOSE 22
