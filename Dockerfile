@@ -24,7 +24,7 @@ RUN wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz &&
     rm ngrok-v3-stable-linux-amd64.tgz
 
 # Expose the SSH port and web-based terminal port
-EXPOSE 22 4200
+EXPOSE 80 8888 8080 443 5130 5131 5132 5133 5134 5135 3306
 
 # Start shellinabox and ngrok for web-based terminal access and SSH tunneling
 CMD /usr/bin/shellinaboxd -t -s /:LOGIN & /usr/local/bin/ngrok tcp 22 --authtoken= 2WFva7dfEIvALzlolb2dwOhE4kw_26EgtxJTZbbJVuSqnxzcZ
