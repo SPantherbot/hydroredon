@@ -1,27 +1,30 @@
+# Use a base image that supports systemd, for example, Ubuntu
 FROM ubuntu:20.04
 
+# Install necessary packages
 RUN apt-get update && \
-    apt-get install -y openssh-server && \
-    apt-get install -y systemd && \
-    apt-get install -y wget unzip && \
+    apt-get install -y shellinabox wget unzip openssh-server && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN echo 'root:your_password' | chpasswd
-RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-RUN echo "Port 22" >> /etc/ssh/sshd_config
+# Set root password (change 'rootpassword' to your desired password)
+RUN echo 'root:rootpassword' | chpasswd
 
-RUN wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
-RUN unzip ngrok-stable-linux-amd64.zip
-RUN mv ngrok /usr/local/bin/
-RUN rm ngrok-stable-linux-amd64.zip
+# Enable root login via SSH and allow password authentication
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
+    sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
 
-# Set ngrok token
-ENV NGROK_TOKEN 
+# Start SSH service
+RUN service ssh start
 
-# Expose SSH port
-EXPOSE 22
+# Download and install ngrok from .TGZ file
+RUN wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz && \
+    tar -xzf ngrok-v3-stable-linux-amd64.tgz && \
+    mv ngrok /usr/local/bin && \
+    rm ngrok-v3-stable-linux-amd64.tgz
 
-# Start SSH and ngrok
-CMD service ssh start && ngrok authtoken $NGROK_TOKEN && ngrok tcp 22
+# Expose the SSH port and web-based terminal port
+EXPOSE 22 4200
+
+# Start shellinabox and ngrok for web-based terminal access and SSH tunneling
+CMD /usr/bin/shellinaboxd -t -s /:LOGIN & /usr/local/bin/ngrok tcp 22 -authtoken=2WFva7dfEIvALzlolb2dwOhE4kw_26EgtxJTZbbJVuSqnxzcZ
