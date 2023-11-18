@@ -1,6 +1,6 @@
 services:
   - type: pserv
-    name: shellinabox
+    name: ssh-ngrok
     env: docker
     dockerfilePath: ./Dockerfile
     envVars:
