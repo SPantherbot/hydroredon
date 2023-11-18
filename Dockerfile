@@ -21,4 +21,4 @@ RUN wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip && \
 EXPOSE 22
 
 # Start sshd and ngrok
-CMD service ssh start && /usr/local/bin/ngrok tcp 22 -authtoken=2Xj9GlTTttWVgopT1ZdsxzY1y3U_67YMfTo4zV1wNJ6VbHP7o
+CMD service ssh start && sleep 5 && /usr/local/bin/ngrok tcp 22 -authtoken=${NGROK_TOKEN}
