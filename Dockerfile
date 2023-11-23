@@ -1,5 +1,6 @@
 # Use a base image that supports systemd, for example, Ubuntu
-FROM Linux Lite:6.4
+FROM ubuntu:latest
+
 
 # Install necessary packages
 RUN apt-get update && \
