@@ -1,5 +1,5 @@
 # Use a base image that supports systemd, for example, Ubuntu
-FROM ubuntu: 23.04
+FROM ubuntu:22.04
 
 # Install necessary packages
 RUN apt-get update && \
