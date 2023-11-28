@@ -6,7 +6,7 @@ components:
     -
         kind: Application
         name: web
-        gitRepo: 'https://github.com/SPantherbot/xssh1.git'
+        gitRepo: 'https://github.com/SPantherbot/hydroredon'
         gitBranch: main
         gitApplicationPath: /
         dockerCompose:
