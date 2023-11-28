@@ -1,22 +1,7 @@
-ind: Environment
-name: neww
-type: primary
-urlHandle: hncofo
-components:
-    -
-        kind: Application
-        name: web
-        gitRepo: 'https://github.com/SPantherbot/hydroredon'
-        gitBranch: main
-        gitApplicationPath: /
-        dockerCompose:
-            build:
-                context: .
-                dockerfile: Dockerfile
-            ports:
-                - '80:80'
-        hosts:
-            -
-                hostname: 'web-{{ env.base_domain }}'
-                path: /
-                servicePort: 80
+version: "3.9"
+services:
+  web:
+    build:
+      context: .
+    ports:
+      - "80:80"
