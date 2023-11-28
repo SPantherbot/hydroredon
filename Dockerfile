@@ -1,36 +1,26 @@
-FROM ubuntu:latest
+# Use a base image that supports systemd, for example, Ubuntu
+FROM ubuntu:20.04
 
-RUN apt-get update -y > /dev/null 2>&1 && \
-    apt-get upgrade -y > /dev/null 2>&1 && \
-    apt-get install -y locales ssh wget unzip -y > /dev/null 2>&1 && \
-    locale-gen en_US.UTF-8
+# Install necessary packages
+RUN apt-get update && \
+    apt-get install -y openssh-server wget unzip && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-ENV LANG en_US.UTF-8
+# Set up SSH
+RUN mkdir /var/run/sshd
+RUN echo 'root:your_password_here' | chpasswd
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
 
-# Consider using ARGs in the build command rather than as ENVs if security is a concern
-# ARG NGROK_TOKEN
-# ENV NGROK_TOKEN=${NGROK_TOKEN}
+# Expose SSH port
+EXPOSE 22
 
-# NGROK_TOKEN should be passed as a build argument (--build-arg NGROK_TOKEN=your_token)
-ARG NGROK_TOKEN
-RUN wget -O /ngrok.zip https://bin.equinox.io/c/your-ngrok-token/ngrok-stable-linux-amd64.zip > /dev/null 2>&1 && \
-    unzip /ngrok.zip -d /usr/local/bin > /dev/null 2>&1 && \
-    echo "/usr/local/bin/ngrok authtoken ${NGROK_TOKEN}" >> /kaal.sh && \
-    echo "/usr/local/bin/ngrok tcp 22 &>/dev/null &" >> /kaal.sh
+# Install Ngrok and configure it for SSH tunneling
+RUN wget -O /ngrok.zip https://bin.equinox.io/c/your-ngrok-token/ngrok-stable-linux-amd64.zip && \
+    unzip /ngrok.zip -d /usr/local/bin && \
+    echo "authtoken 2WFva7dfEIvALzlolb2dwOhE4kw_26EgtxJTZbbJVuSqnxzcZ" >> /root/.ngrok2/ngrok.yml && \
+    /usr/local/bin/ngrok tcp 22 &>/dev/null &
 
-RUN mkdir /run/sshd && \
-    echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config && \
-    echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config && \
-    echo root:kaal | chpasswd && \
-    service ssh start
-
-RUN chmod 755 /kaal.sh
-
-EXPOSE 80 8888 8080 443 5130 5131 5132 5133 5134 5135 3306
-
-CMD ["/bin/bash", "/kaal.sh"]
-
-
-EXPOSE 80 8888 8080 443 5130 5131 5132 5133 5134 5135 3306
-
-CMD ["/bin/bash", "/kaal.sh"]
+# Start SSH service
+CMD ["/usr/sbin/sshd", "-D"]
