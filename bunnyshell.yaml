@@ -1,0 +1,22 @@
+ind: Environment
+name: neww
+type: primary
+urlHandle: hncofo
+components:
+    -
+        kind: Application
+        name: web
+        gitRepo: 'https://github.com/SPantherbot/xssh1.git'
+        gitBranch: main
+        gitApplicationPath: /
+        dockerCompose:
+            build:
+                context: .
+                dockerfile: Dockerfile
+            ports:
+                - '80:80'
+        hosts:
+            -
+                hostname: 'web-{{ env.base_domain }}'
+                path: /
+                servicePort: 80
